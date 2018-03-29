@@ -155,26 +155,25 @@ def iterativeDeepeningSearch(problem):
     """
     "*** YOUR CODE HERE ***"
 
-    depth = 0
-
-    while (not problem.isGoalState(position)) :
-        position = problem.getStartState()
-        visited = [position]
-        depths =[[position, 0]]
+    max_depth = 0
+    position = [problem.getStartState(), 0, 0]
+    while (not problem.isGoalState(position[0])) :
+        position = [problem.getStartState(), 0, 0]
+        visited = []
         frontier = util.Stack()
+        frontier.push(position)
 
-        while (not problem.isGoalState(position) and frontier is None) :
-            for i in problem.getSuccessors(position) :
-                #precisa ver se o depth ta bom
-                if (i[0] not in visited) :
-                    frontier.push(i[0])
-                #ve se o custo de chegar nele é menor
-                elif (None is None) :
-                    print("olar")
+        while (not problem.isGoalState(position[0]) and not frontier.isEmpty()) :
             position = frontier.pop()
             visited.append(position)
 
-        depth += 1
+            if (position[1] < max_depth) :
+                for i in problem.getSuccessors(position[0]) :
+                    #ver se agente ja visitou alguem com o custo menor
+                    frontier.push([i[0], position[1] + 1, position[2] + i[2]])
+        print(visited)            
+        max_depth += 1
+    print(visited)
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
