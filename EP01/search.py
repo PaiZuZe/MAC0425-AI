@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -87,12 +87,62 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    position = problem.getStartState()
+    visited = [position]
+    re_path = [(position, -1, "None")]
+    frontier = util.Stack()
+    while (not problem.isGoalState(position)) :
+        for i in problem.getSuccessors(position) :
+            if (i[0] not in visited) :
+                frontier.push(i[0])
+                re_path.append((i[0], visited.index(position), i[1]))
+        position = frontier.pop()
+        visited.append(position)
+
+    path = util.Stack()
+    i = len(re_path) - 1
+    path.push(re_path[-1][2])
+    while (re_path[i][1] != -1) :
+        k = re_path[i][1]
+        path.push(re_path[i][2])
+        for j in range(len(re_path)) :
+            if (visited[k] == re_path[j][0]) :
+                i = j
+    actions = []
+    while (not path.isEmpty()) :
+        actions.append(path.pop())
+    return(actions[:-1])
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    position = problem.getStartState()
+    visited = [position]
+    re_path = [(position, -1, "None")]
+    frontier = util.Queue()
+    while (not problem.isGoalState(position)) :
+        for i in problem.getSuccessors(position) :
+            if (i[0] not in visited) :
+                frontier.push(i[0])
+                re_path.append((i[0], visited.index(position), i[1]))
+        position = frontier.pop()
+        visited.append(position)
+
+    path = util.Stack()
+    for j in range(len(re_path)) :
+        if (visited[-1] == re_path[j][0]) :
+            i = j
+    path.push(re_path[i][2])
+    while (re_path[i][1] != -1) :
+        k = re_path[i][1]
+        path.push(re_path[i][2])
+        for j in range(len(re_path)) :
+            if (visited[k] == re_path[j][0]) :
+                i = j
+    actions = []
+    while (not path.isEmpty()) :
+        actions.append(path.pop())
+    return(actions[:-1])
 
 def iterativeDeepeningSearch(problem):
     """
@@ -104,6 +154,27 @@ def iterativeDeepeningSearch(problem):
     goal. Make sure to implement a graph search algorithm.
     """
     "*** YOUR CODE HERE ***"
+
+    depth = 0
+
+    while (not problem.isGoalState(position)) :
+        position = problem.getStartState()
+        visited = [position]
+        depths =[[position, 0]]
+        frontier = util.Stack()
+
+        while (not problem.isGoalState(position) and frontier is None) :
+            for i in problem.getSuccessors(position) :
+                #precisa ver se o depth ta bom
+                if (i[0] not in visited) :
+                    frontier.push(i[0])
+                #ve se o custo de chegar nele é menor
+                elif (None is None) :
+                    print("olar")
+            position = frontier.pop()
+            visited.append(position)
+
+        depth += 1
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
@@ -120,9 +191,18 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    # "*** YOUR CODE HERE ***"
-    # util.raiseNotDefined()
-    return []
+    "*** YOUR CODE HERE ***"
+    position = problem.getStartState()
+    frontier = util.PriorityQueue()
+    visited = [position]
+    totCost = [0]
+    while (not problem.isGoalState(position)) :
+        for i in problem.getSuccessors(position) :
+            if (i[0] in visited and totCost[visited.index(i[0])] < i[2]) :
+                continue
+            frontier.update(i[0], i[2] + heuristic(i[0], problem))
+        position = frontier.pop()
+    util.raiseNotDefined()
 
 
 # Abbreviations
