@@ -160,7 +160,8 @@ def iterativeDeepeningSearch(problem):
     position = [problem.getStartState(), 0, 0]
     while (not problem.isGoalState(position[0])) :
         position = [problem.getStartState(), 0, 0]
-        visited = []
+        re_path = {}
+        re_path[position[0]] = [None, None, 0]
         frontier = util.Stack()
         frontier.push(position)
 
@@ -171,14 +172,25 @@ def iterativeDeepeningSearch(problem):
             if (position[1] < max_depth) :
                 for i in problem.getSuccessors(position[0]) :
                     #falsta ver o custo
-                    if (i[0] in (x[0] for x in visited)) :
+                    if (re_path.has_key(i[0])) :
+                        if (re_path[i[0]][2] <= position[2] + i[2]) :
+                            continue
+                    else :
+                        re_path[i[0]] = [position[0], i[1], position[2] + i[2]]
+                        frontier.push([i[0], position[1] + 1, position[2] + i[2]])            
 
-                        continue
-                    frontier.push([i[0], position[1] + 1, position[2] + i[2]])
 
         max_depth += 1
 
-    util.raiseNotDefined()
+    stack = util.Stack()
+    position = position[0]
+    while (re_path[position][0] is not None) :
+        stack.push(re_path[position][1])
+        position = re_path[position][0]
+    path = []
+    while (not stack.isEmpty()) :
+        path.append(stack.pop())
+    return path
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
