@@ -122,7 +122,7 @@ def breadthFirstSearch(problem):
     frontier = util.Queue()
     while (not problem.isGoalState(position)) :
         for i in problem.getSuccessors(position) :
-            if (i[0] not in visited) :
+            if (i[0] not in (x[0] for x in re_path)) :
                 frontier.push(i[0])
                 re_path.append((i[0], visited.index(position), i[1]))
         position = frontier.pop()
@@ -156,6 +156,7 @@ def iterativeDeepeningSearch(problem):
     "*** YOUR CODE HERE ***"
 
     max_depth = 0
+    #[(i, j), depth, cost]
     position = [problem.getStartState(), 0, 0]
     while (not problem.isGoalState(position[0])) :
         position = [problem.getStartState(), 0, 0]
@@ -169,11 +170,14 @@ def iterativeDeepeningSearch(problem):
 
             if (position[1] < max_depth) :
                 for i in problem.getSuccessors(position[0]) :
-                    #ver se agente ja visitou alguem com o custo menor
+                    #falsta ver o custo
+                    if (i[0] in (x[0] for x in visited)) :
+
+                        continue
                     frontier.push([i[0], position[1] + 1, position[2] + i[2]])
-        print(visited)            
+
         max_depth += 1
-    print(visited)
+
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
@@ -191,17 +195,27 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    position = problem.getStartState()
+    re_path = {}
+    position = [problem.getStartState(), 0]
     frontier = util.PriorityQueue()
-    visited = [position]
-    totCost = [0]
-    while (not problem.isGoalState(position)) :
-        for i in problem.getSuccessors(position) :
-            if (i[0] in visited and totCost[visited.index(i[0])] < i[2]) :
+    re_path[position[0]] = (None, None, 0)
+    while (not problem.isGoalState(position[0])) :
+        for i in problem.getSuccessors(position[0]) :
+            if (re_path.has_key(i[0]) and re_path[i[0]][2] < position[1] + i[2]) :
                 continue
-            frontier.update(i[0], i[2] + heuristic(i[0], problem))
+            frontier.push([i[0], position[1] + i[2]], position[1] + i[2] + heuristic(i[0], problem))
+            re_path[i[0]] = (position[0], i[1], position[1] + i[2])
         position = frontier.pop()
-    util.raiseNotDefined()
+
+    stack = util.Stack()
+    position = position[0]
+    while (re_path[position][0] is not None) :
+        stack.push(re_path[position][1])
+        position = re_path[position][0]
+    path = []
+    while (not stack.isEmpty()) :
+        path.append(stack.pop())
+    return path
 
 
 # Abbreviations
