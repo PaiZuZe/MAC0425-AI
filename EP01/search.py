@@ -167,7 +167,6 @@ def iterativeDeepeningSearch(problem):
 
         while (not problem.isGoalState(position[0]) and not frontier.isEmpty()) :
             position = frontier.pop()
-            visited.append(position)
 
             if (position[1] < max_depth) :
                 for i in problem.getSuccessors(position[0]) :
@@ -177,7 +176,7 @@ def iterativeDeepeningSearch(problem):
                             continue
                     else :
                         re_path[i[0]] = [position[0], i[1], position[2] + i[2]]
-                        frontier.push([i[0], position[1] + 1, position[2] + i[2]])            
+                        frontier.push([i[0], position[1] + 1, position[2] + i[2]])
 
 
         max_depth += 1
