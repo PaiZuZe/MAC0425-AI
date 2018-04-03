@@ -161,6 +161,7 @@ def iterativeDeepeningSearch(problem):
     while (not problem.isGoalState(position[0])) :
         position = [problem.getStartState(), 0, 0]
         re_path = {}
+        #[(i,j), dir, cost]
         re_path[position[0]] = [None, None, 0]
         frontier = util.Stack()
         frontier.push(position)
@@ -174,9 +175,9 @@ def iterativeDeepeningSearch(problem):
                     if (re_path.has_key(i[0])) :
                         if (re_path[i[0]][2] <= position[2] + i[2]) :
                             continue
-                    else :
-                        re_path[i[0]] = [position[0], i[1], position[2] + i[2]]
-                        frontier.push([i[0], position[1] + 1, position[2] + i[2]])
+
+                    re_path[i[0]] = [position[0], i[1], position[2] + i[2]]
+                    frontier.push([i[0], position[1] + 1, position[2] + i[2]])
 
 
         max_depth += 1
