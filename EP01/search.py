@@ -213,7 +213,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     re_path[position[0]] = (None, None, 0)
     while (not problem.isGoalState(position[0])) :
         for i in problem.getSuccessors(position[0]) :
-            if (re_path.has_key(i[0]) and re_path[i[0]][2] < position[1] + i[2]) :
+            if (re_path.has_key(i[0]) and re_path[i[0]][2] <= position[1] + i[2]) :
                 continue
             frontier.push([i[0], position[1] + i[2]], position[1] + i[2] + heuristic(i[0], problem))
             re_path[i[0]] = (position[0], i[1], position[1] + i[2])
