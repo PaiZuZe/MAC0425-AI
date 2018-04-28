@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -74,7 +74,23 @@ class ReflexAgent(Agent):
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+        score = 1
+
+        if (currentGameState.getNumFood() > successorGameState.getNumFood()) :
+            score *= 2
+
+        for i in newGhostStates :
+            gosPos = i.getPosition()
+            if (manhattanDistance(gosPos, newPos) == 1) :
+                score -= 10
+
+        if (successorGameState.isLose()) :
+            score = -5000
+        if (successorGameState.isWin()) :
+            socre = 5000
+
+
+        return score
 
 def scoreEvaluationFunction(currentGameState):
     """
@@ -170,4 +186,3 @@ def betterEvaluationFunction(currentGameState):
 
 # Abbreviation
 better = betterEvaluationFunction
-
