@@ -77,7 +77,23 @@ class ReflexAgent(Agent):
         score = 1
 
         if (currentGameState.getNumFood() > successorGameState.getNumFood()) :
-            score *= 2
+            score += 8
+
+        alpha = currentGameState.getFood()
+        beta = successorGameState.getFood()
+        distFood1 = 0
+        distFood2 = 0
+        for i in range(alpha.width) :
+            for j in range(alpha.height) :
+                if(alpha[i][j]) :
+                    distFood1 += manhattanDistance((i,j), currentGameState.getPacmanPosition())
+        for i in range(beta.width) :
+            for j in range(beta.height) :
+                if(beta[i][j]) :
+                    distFood2 += manhattanDistance((i,j), successorGameState.getPacmanPosition())
+
+        if (distFood2 < distFood1) :
+            score += 5
 
         for i in newGhostStates :
             gosPos = i.getPosition()
@@ -88,7 +104,6 @@ class ReflexAgent(Agent):
             score = -5000
         if (successorGameState.isWin()) :
             socre = 5000
-
 
         return score
 
@@ -299,7 +314,36 @@ def betterEvaluationFunction(currentGameState):
       DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    score = 0
+
+    if currentGameState.isWin() :
+        return float("inf")
+    if currentGameState.isLose() :
+        return float("-inf")
+
+    alpha =  currentGameState.getFood()
+    for i in range(alpha.width) :
+        for j in range(alpha.height) :
+            if(alpha[i][j]) :
+                score += 1.0 / manhattanDistance((i,j), currentGameState.getPacmanPosition())
+
+    beta = currentGameState.getNumFood()
+    score += 10000000.0 / beta
+
+    gama = 0
+    for i in currentGameState.getGhostPositions() :
+        gama += manhattanDistance(i, currentGameState.getPacmanPosition())
+    score += gama
+
+
+    ghostStates = currentGameState.getGhostStates()
+    ScaredTimes = [ghostState.scaredTimer for ghostState in ghostStates]
+    for i in ScaredTimes :
+        score += i
+
+    #score += currentGameState.getScore()
+
+    return float(score)
 
 # Abbreviation
 better = betterEvaluationFunction
