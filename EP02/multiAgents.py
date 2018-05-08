@@ -332,7 +332,8 @@ def betterEvaluationFunction(currentGameState):
 
     gama = 0
     for i in currentGameState.getGhostPositions() :
-        gama += manhattanDistance(i, currentGameState.getPacmanPosition())
+        if (manhattanDistance(i, currentGameState.getPacmanPosition()) <= 2) :
+            gama -= 100
     score += gama
 
 
