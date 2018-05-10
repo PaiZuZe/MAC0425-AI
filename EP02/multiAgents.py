@@ -311,14 +311,10 @@ def betterEvaluationFunction(currentGameState):
     if currentGameState.isLose() :
         return float("-inf")
 
-    alpha =  currentGameState.getFood()
-    for i in range(alpha.width) :
-        for j in range(alpha.height) :
-            if(alpha[i][j]) :
-                score += 1.0 / manhattanDistance((i,j), currentGameState.getPacmanPosition())
-
+    alpha = util.breadthFirstSearch(currentGameState)
+    score += 1.0 / alpha
     beta = currentGameState.getNumFood()
-    score += 10000000.0 / beta
+    score += 10000.0 / beta
 
     gama = 0
     for i in currentGameState.getGhostPositions() :
@@ -326,13 +322,10 @@ def betterEvaluationFunction(currentGameState):
             gama -= 100
     score += gama
 
-
     ghostStates = currentGameState.getGhostStates()
     ScaredTimes = [ghostState.scaredTimer for ghostState in ghostStates]
     for i in ScaredTimes :
-        score += i
-
-    #score += currentGameState.getScore()
+        score += i/2
 
     return float(score)
 
