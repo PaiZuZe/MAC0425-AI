@@ -74,36 +74,26 @@ class ReflexAgent(Agent):
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "*** YOUR CODE HERE ***"
+        if (successorGameState.isLose()) :
+            return -5000
+        if (successorGameState.isWin()) :
+            return 5000
+
         score = 1
 
         if (currentGameState.getNumFood() > successorGameState.getNumFood()) :
             score += 8
 
-        alpha = currentGameState.getFood()
-        beta = successorGameState.getFood()
-        distFood1 = 0
-        distFood2 = 0
-        for i in range(alpha.width) :
-            for j in range(alpha.height) :
-                if(alpha[i][j]) :
-                    distFood1 += manhattanDistance((i,j), currentGameState.getPacmanPosition())
-        for i in range(beta.width) :
-            for j in range(beta.height) :
-                if(beta[i][j]) :
-                    distFood2 += manhattanDistance((i,j), successorGameState.getPacmanPosition())
-
-        if (distFood2 < distFood1) :
-            score += 5
+        else :
+            distFood1 = util.breadthFirstSearch(currentGameState)
+            distFood2 = util.breadthFirstSearch(successorGameState)
+            if (distFood2 < distFood1) :
+                score += 5
 
         for i in newGhostStates :
             gosPos = i.getPosition()
-            if (manhattanDistance(gosPos, newPos) == 1) :
+            if (manhattanDistance(gosPos, newPos) <= 2) :
                 score -= 10
-
-        if (successorGameState.isLose()) :
-            score = -5000
-        if (successorGameState.isWin()) :
-            socre = 5000
 
         return score
 

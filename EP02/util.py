@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -112,6 +112,37 @@ class FixedRandom:
             230984053L, 719791226L, 2718891946L, 624L), None)
         self.random = random.Random()
         self.random.setstate(fixedState)
+
+def breadthFirstSearch(currentGameState):
+    position = currentGameState.getPacmanPosition()
+    visited = [position]
+    food = currentGameState.getFood()
+    re_path = [(position, -1, "None")]
+    frontier = Queue()
+    while (not food[position[0]][position[1]]) :
+        for action in currentGameState.getLegalActions(0) :
+            gameState = currentGameState.generateSuccessor(0, action)
+            if (gameState.getPacmanPosition() not in (x[0] for x in re_path)) :
+                frontier.push(gameState)
+                re_path.append((gameState.getPacmanPosition(), visited.index(position)))
+        if (frontier.isEmpty()) :
+            break
+        currentGameState = frontier.pop()
+        position = currentGameState.getPacmanPosition()
+        visited.append(position)
+
+    for j in range(len(re_path)) :
+        if (visited[-1] == re_path[j][0]) :
+            i = j
+
+    distance = 0
+    while (re_path[i][1] != -1) :
+        k = re_path[i][1]
+        distance += 1
+        for j in range(len(re_path)) :
+            if (visited[k] == re_path[j][0]) :
+                i = j
+    return(distance)
 
 """
  Data structures useful for implementing SearchAgents
@@ -650,4 +681,3 @@ def unmutePrint():
 
     sys.stdout = _ORIGINAL_STDOUT
     #sys.stderr = _ORIGINAL_STDERR
-
