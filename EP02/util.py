@@ -115,33 +115,25 @@ class FixedRandom:
 
 def breadthFirstSearch(currentGameState):
     position = currentGameState.getPacmanPosition()
-    visited = [position]
     food = currentGameState.getFood()
-    re_path = [(position, -1, "None")]
+    re_path = {}
+    re_path[position] = None
     frontier = Queue()
     while (not food[position[0]][position[1]]) :
         for action in currentGameState.getLegalActions(0) :
             gameState = currentGameState.generateSuccessor(0, action)
-            if (gameState.getPacmanPosition() not in (x[0] for x in re_path)) :
+            if (not re_path.has_key(gameState.getPacmanPosition())) :
                 frontier.push(gameState)
-                re_path.append((gameState.getPacmanPosition(), visited.index(position)))
+                re_path[gameState.getPacmanPosition()] = position
         if (frontier.isEmpty()) :
             break
         currentGameState = frontier.pop()
         position = currentGameState.getPacmanPosition()
-        visited.append(position)
-
-    for j in range(len(re_path)) :
-        if (visited[-1] == re_path[j][0]) :
-            i = j
 
     distance = 0
-    while (re_path[i][1] != -1) :
-        k = re_path[i][1]
+    while (re_path[position] is not None) :
         distance += 1
-        for j in range(len(re_path)) :
-            if (visited[k] == re_path[j][0]) :
-                i = j
+        position = re_path[position]
     return(distance)
 
 """
