@@ -79,23 +79,23 @@ class ReflexAgent(Agent):
         if (successorGameState.isWin()) :
             return 5000
 
-        score = 1
+        grade = 1
 
         if (currentGameState.getNumFood() > successorGameState.getNumFood()) :
-            score += 8
+            grade += 8
 
         else :
             distFood1 = util.breadthFirstSearch(currentGameState)
             distFood2 = util.breadthFirstSearch(successorGameState)
             if (distFood2 < distFood1) :
-                score += 5
+                grade += 5
 
         for i in newGhostStates :
             gosPos = i.getPosition()
             if (manhattanDistance(gosPos, newPos) <= 2) :
-                score -= 10
+                grade -= 10
 
-        return score
+        return grade
 
 def scoreEvaluationFunction(currentGameState):
     """
@@ -304,30 +304,29 @@ def betterEvaluationFunction(currentGameState):
       DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    score = 0
+    grade = scoreEvaluationFunction(currentGameState)
 
-    if currentGameState.isWin() :
-        return float("inf")
     if currentGameState.isLose() :
         return float("-inf")
 
-    alpha = util.breadthFirstSearch(currentGameState)
-    score += 1.0 / alpha
-    beta = currentGameState.getNumFood()
-    score += 10000.0 / beta
+    beta = currentGameState.getNumFood() + 1
+    grade += 10000.0 / beta
+    if (beta > 1) :
+        alpha = util.breadthFirstSearch(currentGameState)
+        grade += 1.0 / alpha
 
     gama = 0
     for i in currentGameState.getGhostPositions() :
         if (manhattanDistance(i, currentGameState.getPacmanPosition()) <= 2) :
             gama -= 100
-    score += gama
+    grade += gama
 
     ghostStates = currentGameState.getGhostStates()
     ScaredTimes = [ghostState.scaredTimer for ghostState in ghostStates]
     for i in ScaredTimes :
-        score += i/2
+        grade += i/2
 
-    return float(score)
+    return float(grade)
 
 # Abbreviation
 better = betterEvaluationFunction
