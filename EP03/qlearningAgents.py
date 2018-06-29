@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -74,10 +74,10 @@ class QLearningAgent(ReinforcementAgent):
         """
         "*** YOUR CODE HERE ***"
         action = None
-        actions_values = [(self.q_values[(state, a)], a) for a in self.getLegalActions(sate)]
+        actions_values = [(self.q_values[(state, a)], a) for a in self.getLegalActions(state)]
         if (len(actions_values) != 0) :
             action = max(actions_values, key=lambda x:x[0])[1]
-        return actions
+        return action
 
     def getAction(self, state):
         """
@@ -94,8 +94,12 @@ class QLearningAgent(ReinforcementAgent):
         legalActions = self.getLegalActions(state)
         action = None
         "*** YOUR CODE HERE ***"
-
-
+        values_actions = [(q_values[(state, a)], a) for a in legalActions]
+        if (len(legalActions) != 0) :
+            if (util.flipCoin(self.epsilon)) :
+                action = random.choice(values_actions)[1]
+            else :
+                action = max(values_actions, key=lambda x:x[0])[1]
         return action
 
     def update(self, state, action, nextState, reward):
@@ -108,7 +112,11 @@ class QLearningAgent(ReinforcementAgent):
           it will be called on your behalf
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        sample = reward
+        actions = self.getLegalActions(nextState)
+        if (len(actions) != 0) :
+            sample += self.discount * max([self.q_values[(nextState, a)] for a in actions])
+        self.q_values[(state, action)] = (1 - self.alpha) * self.q_values[(state, action)] + self.alpha * sample
 
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)
