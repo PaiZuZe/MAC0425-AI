@@ -74,9 +74,9 @@ class QLearningAgent(ReinforcementAgent):
         """
         "*** YOUR CODE HERE ***"
         action = None
-        actions_values = [(self.q_values[(state, a)], a) for a in self.getLegalActions(state)]
-        if (len(actions_values) != 0) :
-            action = max(actions_values, key=lambda x:x[0])[1]
+        values_actions = [(self.q_values[(state, a)], a) for a in self.getLegalActions(state)]
+        if (len(values_actions) != 0) :
+            action = max(values_actions, key=lambda x:x[0])[1]
         return action
 
     def getAction(self, state):
@@ -94,7 +94,7 @@ class QLearningAgent(ReinforcementAgent):
         legalActions = self.getLegalActions(state)
         action = None
         "*** YOUR CODE HERE ***"
-        values_actions = [(q_values[(state, a)], a) for a in legalActions]
+        values_actions = [(self.q_values[(state, a)], a) for a in legalActions]
         if (len(legalActions) != 0) :
             if (util.flipCoin(self.epsilon)) :
                 action = random.choice(values_actions)[1]
