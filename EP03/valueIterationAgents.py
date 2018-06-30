@@ -1,10 +1,12 @@
+#Nome: Victor Chiaradia Gramuglia Araujo Nusp: 9793756
+
 # valueIterationAgents.py
 # -----------------------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -43,13 +45,13 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.iterations = iterations
         self.values = util.Counter() # A Counter is a dict with default 0
         self.old_val = util.Counter()
-        
+
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
         for i in range(self.iterations) :
             self.old_val = self.values.copy()
             for state in self.mdp.getStates() :
-                if (not self.mdp.isTerminal(state)) :    
+                if (not self.mdp.isTerminal(state)) :
                     max = float("-inf")
                     for a in self.mdp.getPossibleActions(state) :
                         state_prob = self.mdp.getTransitionStatesAndProbs(state, a)
@@ -60,7 +62,7 @@ class ValueIterationAgent(ValueEstimationAgent):
                         temp = q_value
                         if (temp > max) :
                             max = temp
-                    self.values[state] = max        
+                    self.values[state] = max
 
     def getValue(self, state):
         """
@@ -80,7 +82,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         for i in state_prob :
             nxt, prob = i[0], i[1]
             q_value += prob * (self.mdp.getReward(state, action, nxt) + self.discount * self.values[nxt])
-        return q_value    
+        return q_value
 
     def computeActionFromValues(self, state):
         """
@@ -99,7 +101,7 @@ class ValueIterationAgent(ValueEstimationAgent):
             if (temp > max) :
                 best = a
                 max = temp
-        return best        
+        return best
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)

@@ -10,3 +10,7 @@ We had to implement a DFS, BFS, IDS and A* search algorithm.
 
 ## [EP02](http://ai.berkeley.edu/multiagent.html)
 We had to implement the minimax with and without the aplha-beta pruning and the expectimax algorithm. And make two evaluation functions, one for actions and other for states.      
+
+
+## [EP03](http://ai.berkeley.edu/reinforcement.html)
+We had to solve a MDP (finding the optimal policy) and implement the Q-learning algorithm in two different ways, one with weights and one based in iterations. 
