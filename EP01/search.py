@@ -96,6 +96,7 @@ def depthFirstSearch(problem):
     frontier = util.Stack()
     #We know that there is always a way to reach our goal.
     while (not problem.isGoalState(position)) :
+        #i has the position, how we got there and the cost
         for i in problem.getSuccessors(position) :
             if (i[0] not in visited) :
                 frontier.push(i[0])
@@ -115,32 +116,25 @@ def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     position = problem.getStartState()
-    visited = [position]
-    re_path = [(position, -1, "None")]
+    
+    #Holds the node that we used to come here and the direction to do that.
+    re_path = {position: [None, None]}
     frontier = util.Queue()
+    #We know that there is always a way to reach our goal.
     while (not problem.isGoalState(position)) :
+        #i has the position, how we got there and the cost
         for i in problem.getSuccessors(position) :
-            if (i[0] not in (x[0] for x in re_path)) :
+            if (not re_path.has_key(i[0])) :
                 frontier.push(i[0])
-                re_path.append((i[0], visited.index(position), i[1]))
+                re_path[i[0]] = [position, i[1]]
         position = frontier.pop()
-        visited.append(position)
-
-    path = util.Stack()
-    for j in range(len(re_path)) :
-        if (visited[-1] == re_path[j][0]) :
-            i = j
-    path.push(re_path[i][2])
-    while (re_path[i][1] != -1) :
-        k = re_path[i][1]
-        path.push(re_path[i][2])
-        for j in range(len(re_path)) :
-            if (visited[k] == re_path[j][0]) :
-                i = j
-    actions = []
-    while (not path.isEmpty()) :
-        actions.append(path.pop())
-    return(actions[:-1])
+    
+    path = []
+    while (re_path[position][0] is not None) :
+        path.append(re_path[position][1])
+        position = re_path[position][0]
+    path.reverse()
+    return path    
 
 def iterativeDeepeningSearch(problem):
     """
